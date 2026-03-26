@@ -6,13 +6,14 @@ def positional_encoding(seq_len, d_model, base=10000.0):
     Odd d_model -> last column is sin.
     """
     # Write code here
+    pos = np.arange(seq_len)[:, None]
+
+    div_term = base ** ((2 * (np.arange(d_model) // 2)) / d_model)
+    angles = pos / div_term
+
     ans = np.zeros((seq_len, d_model))
-    for j in range(0, seq_len):
-        for i in range(0, d_model//2):
-            ans[j][2*i] = np.sin(j/base**(2*i/d_model))
-            ans[j][2*i+1] = np.cos(j/base**(2*i/d_model))
-        if d_model % 2 == 1:
-            ans[j][d_model - 1] = np.sin(j/base**((d_model-1)/d_model))
+    ans[:, 0::2] = np.sin(angles[:, 0::2])
+    ans[:, 1::2] = np.cos(angles[:, 1::2])
 
     return ans
     pass
